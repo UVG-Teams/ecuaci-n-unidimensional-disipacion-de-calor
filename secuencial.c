@@ -19,23 +19,23 @@ int main(int argc, char* argv[]) {
     double L, x, t, t0, tl, tr;
     double c = 0.000001; //10e-5 m^2/s
 
-    printf("Ingrese el las iteraciones de tiempo: ");
+    printf("\nIngrese el las iteraciones de tiempo: ");
     scanf("%d", &time_iterations);
     // printf("Ingrese la precisión requerida: ");
     // scanf("%d", &err);
-    printf("Ingrese el numero de intervalos discretos: ");
+    printf("\nIngrese el numero de intervalos discretos: ");
     scanf("%d", &N);
     // N = 10;
-    printf("Ingrese la temperatura inicial: ");
+    // printf("\nIngrese la temperatura inicial: ");
     // scanf("%lf", &t0);
     t0 = 20;
-    printf("Ingrese la temperatura del extremo izquierdo de la barra: ");
+    // printf("\nIngrese la temperatura del extremo izquierdo de la barra: ");
     // scanf("%lf", &tl);
     tl = 50;
-    printf("Ingrese la temperatura del extremo derecho de la barra: ");
+    // printf("\nIngrese la temperatura del extremo derecho de la barra: ");
     // scanf("%lf", &tr);
     tr = 60;
-    printf("err: %d  N: %d t0: %g tl: %g tr: %g", err, N, t0, tl, tr);
+    printf("\nerr: %d\n  N: %d\n t0: %g\n tl: %g\n tr: %g\n", err, N, t0, tl, tr);
 
     // One dimensional heat dissipation equation
     // dT/dt = c*dT/dx
@@ -57,13 +57,8 @@ int main(int argc, char* argv[]) {
     }
 
     // printf("\n\n");
-    // for (int e = 0; e < N; e++) {
-    //     printf("%f ", current_T[e]);
-    // }
-
-    // printf("\n\n");
-    // for (int e = 0; e < N; e++) {
-    //     printf("%f ", next_T[e]);
+    // for (int j = 0; j < N; j++) {
+    //     printf("%f ", current_T[j]);
     // }
 
 
@@ -73,13 +68,22 @@ int main(int argc, char* argv[]) {
     // i es control de tiempo
     while (T_i < time_iterations) {
         printf("\n\nTime step: %d\n", T_i);
-        // for(int j = 2; j <= L-1; j++) {
+        // for(int j = 2; j <= N-1; j++) {???
         for (int j = 0; j < N; j++) {
-            new_temp = current_T[j] + (c/pow(x, 2)) * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
-            printf("\n%f", new_temp);
+            next_T[j] = current_T[j] + (c/pow(x, 2)) * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
         };
 
+        for (int j = 0; j < N; j++) {
+            printf("%f ", next_T[j]);
+        }
+
+        for (int j = 0; j < N; j++) {
+            current_T[j] = next_T[j];
+            next_T[j] = 0.0;
+        }
+
         T_i++;
+        printf("\n");
     };
 
 
