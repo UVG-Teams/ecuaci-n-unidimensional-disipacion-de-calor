@@ -15,8 +15,14 @@
 
 
 int main(int argc, char* argv[]) {
+    // One dimensional heat dissipation equation
+    // dT/dt = c*dT/dx
+    // T(x,0) = t0
+    // T(0,t) = tl
+    // T(L,t) = tr
     int N, err, time_iterations;
-    double L, x, t, t0, tl, tr;
+    double L = 100.0;
+    double delta_x, delta_t, t0, tl, tr;
     double c = 0.000001; //10e-5 m^2/s
 
     printf("\nIngrese el las iteraciones de tiempo: ");
@@ -37,17 +43,10 @@ int main(int argc, char* argv[]) {
     tr = 60;
     printf("\nerr: %d\n  N: %d\n t0: %g\n tl: %g\n tr: %g\n", err, N, t0, tl, tr);
 
-    // One dimensional heat dissipation equation
-    // dT/dt = c*dT/dx
-    // T(x,0) = t0
-    // T(0,t) = tl
-    // T(L,t) = tr
+    delta_x = L / N;
+    delta_t = 5;
 
-    // Division of the domain in discrete intervals
-    L = 100.0;
-    x = L / N;
-
-    // Initialize the temperature matrix
+    // Initialize the temperature vectors
     double current_T[N];
     double next_T[N];
 
@@ -56,23 +55,31 @@ int main(int argc, char* argv[]) {
         next_T[j] = 0.0;
     }
 
+    // Set the boundary conditions
+    current_T[0] = tl;
+    current_T[N-1] = tr;
+
     // printf("\n\n");
     // for (int j = 0; j < N; j++) {
     //     printf("%f ", current_T[j]);
     // }
 
 
-    int T_i = 0;
-    double new_temp;
     // j es control de distancia
     // i es control de tiempo
+    int T_i = 0;
     while (T_i < time_iterations) {
         printf("\n\nTime step: %d\n", T_i);
         // for(int j = 2; j <= N-1; j++) {???
         for (int j = 0; j < N; j++) {
-            next_T[j] = current_T[j] + (c/pow(x, 2)) * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
+            next_T[j] = current_T[j] + ((c * delta_t)/pow(delta_x, 2)) * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
         };
 
+        for (int j = 0; j < N; j++) {
+            printf("%f ", current_T[j]);
+        }
+
+        printf("\n");
         for (int j = 0; j < N; j++) {
             printf("%f ", next_T[j]);
         }
