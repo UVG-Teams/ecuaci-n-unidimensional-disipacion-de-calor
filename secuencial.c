@@ -21,30 +21,41 @@ int main(int argc, char* argv[]) {
     // T(0,t) = tl
     // T(L,t) = tr
     int N, err, time_iterations;
-    double L = 100.0;
-    double delta_x, delta_t, t0, tl, tr;
+    double L, delta_x, delta_t, t0, tl, tr;
     double c = 0.000001; //10e-5 m^2/s
 
-    printf("\nIngrese el las iteraciones de tiempo: ");
-    scanf("%d", &time_iterations);
-    // printf("Ingrese la precisión requerida: ");
-    // scanf("%d", &err);
-    printf("\nIngrese el numero de intervalos discretos: ");
-    scanf("%d", &N);
-    // N = 10;
+    // printf("\nIngrese el las iteraciones de tiempo: ");
+    // scanf("%d", &time_iterations);
+    // // printf("Ingrese la precisión requerida: ");
+    // // scanf("%d", &err);
+    // printf("\nIngrese el largo de la barra: ");
+    // scanf("%lf", &L);
+    // printf("\nIngrese el numero de intervalos discretos: ");
+    // scanf("%d", &N);
     // printf("\nIngrese la temperatura inicial: ");
     // scanf("%lf", &t0);
-    t0 = 20;
     // printf("\nIngrese la temperatura del extremo izquierdo de la barra: ");
     // scanf("%lf", &tl);
-    tl = 50;
     // printf("\nIngrese la temperatura del extremo derecho de la barra: ");
     // scanf("%lf", &tr);
-    tr = 60;
-    printf("\nerr: %d\n  N: %d\n t0: %g\n tl: %g\n tr: %g\n", err, N, t0, tl, tr);
+    // printf("\nerr: %d\n  N: %d\n t0: %g\n tl: %g\n tr: %g\n", err, N, t0, tl, tr);
+
+    time_iterations = 2000000;
+    L = 1;
+    N = 5000;
+    t0 = 20;
+    tl = 90;
+    tr = 100;
 
     delta_x = L / N;
-    delta_t = 5;
+    delta_t = 0.02;
+    // delta_t = (pow(delta_x, 2)*0.5)/c;
+
+
+    double C = (c * delta_t) / (delta_x * delta_x);
+    printf("\nC: %g\n", C);
+
+    // return 1;
 
     // Initialize the temperature vectors
     double current_T[N];
@@ -59,11 +70,6 @@ int main(int argc, char* argv[]) {
     current_T[0] = tl;
     current_T[N-1] = tr;
 
-    // printf("\n\n");
-    // for (int j = 0; j < N; j++) {
-    //     printf("%f ", current_T[j]);
-    // }
-
 
     // j es control de distancia
     // i es control de tiempo
@@ -72,12 +78,12 @@ int main(int argc, char* argv[]) {
         printf("\n\nTime step: %d\n", T_i);
         // for(int j = 2; j <= N-1; j++) {???
         for (int j = 0; j < N; j++) {
-            next_T[j] = current_T[j] + ((c * delta_t)/pow(delta_x, 2)) * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
+            next_T[j] = current_T[j] + C * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
         };
 
-        for (int j = 0; j < N; j++) {
-            printf("%f ", current_T[j]);
-        }
+        // for (int j = 0; j < N; j++) {
+        //     printf("%f ", current_T[j]);
+        // }
 
         printf("\n");
         for (int j = 0; j < N; j++) {
