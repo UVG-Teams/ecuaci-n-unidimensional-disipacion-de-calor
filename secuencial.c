@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     // T(L,t) = tr
     int N, err, time_iterations;
     double L, delta_x, delta_t, t0, tl, tr;
-    double c = 0.000001; //10e-5 m^2/s
+    double c = 1e-5; //10e-5 m^2/s
 
     // printf("\nIngrese el las iteraciones de tiempo: ");
     // scanf("%d", &time_iterations);
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     // scanf("%lf", &tr);
     // printf("\nerr: %d\n  N: %d\n t0: %g\n tl: %g\n tr: %g\n", err, N, t0, tl, tr);
 
-    time_iterations = 2000000;
+    time_iterations = 1000;
     L = 1;
     N = 5000;
     t0 = 20;
@@ -48,12 +48,11 @@ int main(int argc, char* argv[]) {
     tr = 100;
 
     delta_x = L / N;
-    delta_t = 0.02;
-    // delta_t = (pow(delta_x, 2)*0.5)/c;
+    // delta_t = ((delta_x * delta_x)*0.5)/c;
 
 
-    double C = (c * delta_t) / (delta_x * delta_x);
-    printf("\nC: %g\n", C);
+    // double C = (c * delta_t) / (delta_x * delta_x);
+    double C = 0.5;
 
     // return 1;
 
@@ -78,7 +77,11 @@ int main(int argc, char* argv[]) {
         printf("\n\nTime step: %d\n", T_i);
         // for(int j = 2; j <= N-1; j++) {???
         for (int j = 0; j < N; j++) {
-            next_T[j] = current_T[j] + C * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
+            if (j == 0 || j== N-1){
+                next_T[j] = current_T[j];
+            } else {
+                next_T[j] = current_T[j] + C * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
+            }
         };
 
         // for (int j = 0; j < N; j++) {
