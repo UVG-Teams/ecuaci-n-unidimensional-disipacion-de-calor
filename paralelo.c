@@ -27,22 +27,6 @@ int main(int argc, char* argv[]) {
     double L, delta_x, delta_t, t0, tl, tr;
     double c = 1e-5; //10e-5 m^2/s
 
-    // printf("\nIngrese el las iteraciones de tiempo: ");
-    // scanf("%d", &time_iterations);
-    // // printf("Ingrese la precisión requerida: ");
-    // // scanf("%d", &err);
-    // printf("\nIngrese el largo de la barra: ");
-    // scanf("%lf", &L);
-    // printf("\nIngrese el numero de intervalos discretos: ");
-    // scanf("%d", &N);
-    // printf("\nIngrese la temperatura inicial: ");
-    // scanf("%lf", &t0);
-    // printf("\nIngrese la temperatura del extremo izquierdo de la barra: ");
-    // scanf("%lf", &tl);
-    // printf("\nIngrese la temperatura del extremo derecho de la barra: ");
-    // scanf("%lf", &tr);
-    // printf("\nerr: %d\n  N: %d\n t0: %g\n tl: %g\n tr: %g\n", err, N, t0, tl, tr);
-
     time_iterations = 1000;
     L = 1;
     N = 5000;
@@ -53,11 +37,8 @@ int main(int argc, char* argv[]) {
     delta_x = L / N;
     // delta_t = ((delta_x * delta_x)*0.5)/c;
 
-
     // double C = (c * delta_t) / (delta_x * delta_x);
     double C = 0.5;
-
-    // return 1;
 
     // Initialize the temperature vectors
     double current_T[N];
@@ -72,29 +53,25 @@ int main(int argc, char* argv[]) {
     current_T[0] = tl;
     current_T[N-1] = tr;
 
-
     // j es control de distancia
     // i es control de tiempo
     int T_i = 0;
+
     #pragma omp parallel num_threads(8) firstprivate(current_T)
     while (T_i < time_iterations) {
         printf("\n\nTime step: %d\n", T_i);
-        // for(int j = 2; j <= N-1; j++) {???
+
         #pragma omp for schedule(static , 1000)
         for (int j = 0; j < N; j++) {
-            if (j == 0 || j== N-1){
+            if (j == 0 || j == N-1){
                 next_T[j] = current_T[j];
             } else {
                 next_T[j] = current_T[j] + C * (current_T[j-1] - 2 * current_T[j] + current_T[j+1]);
             }
         };
 
-        // for (int j = 0; j < N; j++) {
-        //     printf("%f ", current_T[j]);
-        // }
-
         printf("\n");
-        #pragma omp single 
+        #pragma omp single
         {
             for (int j = 0; j < N; j++) {
                 printf("%f ", next_T[j]);
