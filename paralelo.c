@@ -3,10 +3,10 @@
     - Francisco Rosal
     - Gian Luca Rivera
 
-    Compilar: gcc -o paralelo paralelo.c -fopenmp
-    Ejeutar: ./paralelo
+    Compilar: gcc -o secuencial secuencial.c
+    Ejeutar: ./secuencial
 
-    mac : gcc-11 -o paralelo paralelo.c -fopenmp
+    gcc -o secuencial secuencial.c && ./secuencial
 */
 
 #include <stdio.h>
@@ -16,6 +16,7 @@
 
 
 int main(int argc, char* argv[]) {
+
     double t_init = omp_get_wtime();
     // One dimensional heat dissipation equation
     // dT/dt = c*dT/dx
@@ -75,7 +76,6 @@ int main(int argc, char* argv[]) {
     // j es control de distancia
     // i es control de tiempo
     int T_i = 0;
-    // #pragma omp parallel num_threads(8)
     #pragma omp parallel num_threads(8) firstprivate(current_T)
     while (T_i < time_iterations) {
         printf("\n\nTime step: %d\n", T_i);
@@ -94,14 +94,16 @@ int main(int argc, char* argv[]) {
         // }
 
         printf("\n");
-        #pragma omp for
-        for (int j = 0; j < N; j++) {
-            printf("%f ", next_T[j]);
-        }
-        #pragma omp for
-        for (int j = 0; j < N; j++) {
-            current_T[j] = next_T[j];
-            next_T[j] = 0.0;
+        #pragma omp single 
+        {
+            for (int j = 0; j < N; j++) {
+                printf("%f ", next_T[j]);
+            }
+
+            for (int j = 0; j < N; j++) {
+                current_T[j] = next_T[j];
+                next_T[j] = 0.0;
+            }
         }
 
         T_i++;
