@@ -12,9 +12,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
 
 
 int main(int argc, char* argv[]) {
+
+    double t_init = omp_get_wtime();
     // One dimensional heat dissipation equation
     // dT/dt = c*dT/dx
     // T(x,0) = t0
@@ -102,6 +105,10 @@ int main(int argc, char* argv[]) {
         printf("\n");
     };
 
+    double t_fin = omp_get_wtime();
+    double delta = t_fin - t_init;
+
+    printf("Tiempo: %lf ", delta);
 
     return 0;
 }

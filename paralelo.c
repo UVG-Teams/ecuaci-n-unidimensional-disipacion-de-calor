@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
     // j es control de distancia
     // i es control de tiempo
     int T_i = 0;
-    // #pragma omp parallel num_threads(8)
+    // #pragma omp parallel num_threads(2)
     while (T_i < time_iterations) {
         printf("\n\nTime step: %d\n", T_i);
         // for(int j = 2; j <= N-1; j++) {???
@@ -93,10 +93,12 @@ int main(int argc, char* argv[]) {
         // }
 
         printf("\n");
+        // #pragma omp parallel for 
         for (int j = 0; j < N; j++) {
             printf("%f ", next_T[j]);
         }
 
+        // #pragma omp parallel for 
         for (int j = 0; j < N; j++) {
             current_T[j] = next_T[j];
             next_T[j] = 0.0;
